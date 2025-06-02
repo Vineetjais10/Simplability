@@ -1,0 +1,11 @@
+FROM node:22.13.1
+WORKDIR /code
+# Install build tools for bcrypt
+RUN apt-get update && apt-get install -y python3 make g++
+COPY package.json package-lock.json* /code/
+RUN npm install
+# Rebuild bcrypt for the container's environment
+RUN npm rebuild bcrypt
+COPY . /code
+ENTRYPOINT ["/bin/bash", "/code/entrypoint.sh"]
+CMD ["npm", "run", "dev"]
